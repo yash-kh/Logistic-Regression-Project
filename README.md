@@ -19,14 +19,14 @@ import seaborn as sns
 train = pd.read_csv('titanic_train.csv')
 train.head()
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/1.PNG?raw=true)
 
 # Exploratory Data Analysis
 ## Missing Data
 ```python
 sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/2.PNG?raw=true)
 
 Roughly 20 percent of the Age data is missing. The proportion of Age missing is likely small enough for reasonable replacement with some form of imputation. Looking at the Cabin column, it looks like we are just missing too much of that data to do something useful with at a basic level. We'll probably drop this or change it to another feature like "Cabin Known: 1 or 0"
 
@@ -35,38 +35,38 @@ sns.set_style('whitegrid')
 sns.countplot(x='Survived',data=train,palette='RdBu_r')
 ```
 
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/3.PNG?raw=true)
 
 ```python
 sns.set_style('whitegrid')
 sns.countplot(x='Survived',hue='Sex',data=train,palette='RdBu_r')
 ```
 
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/4.PNG?raw=true)
 
 ```python
 sns.set_style('whitegrid')
 sns.countplot(x='Survived',hue='Pclass',data=train,palette='rainbow')
 ```
 
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/5.PNG?raw=true)
 
 ```python
 train['Age'].hist(bins=30,color='darkred',alpha=0.7)
 ```
 
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/6.PNG?raw=true)
 
 ```python
 sns.countplot(x='SibSp',data=train)
 ```
 
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/7.PNG?raw=true)
 
 ```python
 train['Fare'].hist(color='green',bins=40,figsize=(8,4))
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/8.PNG?raw=true)
 
 ## Data Cleaning
 We want to fill in missing age data instead of just dropping the missing age data rows. One way to do this is by filling in the mean age of all the passengers (imputation).
@@ -103,7 +103,7 @@ Now let's check that heat map again!
 ```python
 sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/9.PNG?raw=true)
 
 Great! Let's go ahead and drop the Cabin column and the row in Embarked that is NaN.
 ```python
@@ -112,14 +112,14 @@ train.drop('Cabin',axis=1,inplace=True)
 ```python
 sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/10.PNG?raw=true)
 ```python
 train = train.dropna()
 ```
 ```python
 sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/11.PNG?raw=true)
 
 # Converting Categorical Features 
 
@@ -134,7 +134,7 @@ train = pd.concat([train,sex,embark],axis=1)
 ```python
 train.head()
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/12.PNG?raw=true)
 
 # Building a Logistic Regression model
 
@@ -159,6 +159,6 @@ predictions = logmodel.predict(X_test)
 from sklearn.metrics import classification_report
 print(classification_report(y_test,predictions))
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/13.PNG?raw=true)
 
 At last we got a score of 82% accuracy on this model.
