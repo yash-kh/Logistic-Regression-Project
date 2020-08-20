@@ -34,17 +34,131 @@ Roughly 20 percent of the Age data is missing. The proportion of Age missing is 
 sns.set_style('whitegrid')
 sns.countplot(x='Survived',data=train,palette='RdBu_r')
 ```
+
 ![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
 ```python
 sns.set_style('whitegrid')
 sns.countplot(x='Survived',hue='Sex',data=train,palette='RdBu_r')
 ```
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
 
 ![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
 
-![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+```python
+sns.set_style('whitegrid')
+sns.countplot(x='Survived',hue='Pclass',data=train,palette='rainbow')
+```
 
 ![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
 
+```python
+train['Age'].hist(bins=30,color='darkred',alpha=0.7)
+```
+
 ![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+```python
+sns.countplot(x='SibSp',data=train)
+```
+
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+```python
+train['Fare'].hist(color='green',bins=40,figsize=(8,4))
+```
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+## Data Cleaning
+We want to fill in missing age data instead of just dropping the missing age data rows. One way to do this is by filling in the mean age of all the passengers (imputation).
+However we can be smarter about this and check the average age by passenger class. For example:
+```python
+plt.figure(figsize=(12, 7))
+sns.boxplot(x='Pclass',y='Age',data=train,palette='winter')
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+```
+We can see the wealthier passengers in the higher classes tend to be older, which makes sense. We'll use these average age values to impute based on Pclass for Age.
+```python
+def impute_age(cols):
+    Age = cols[0]
+    Pclass = cols[1]
+    
+    if pd.isnull(Age):
+
+        if Pclass == 1:
+            return 37
+
+        elif Pclass == 2:
+            return 29
+
+        else:
+            return 24
+
+    else:
+        return Age
+```
+```python
+train['Age'] = train[['Age','Pclass']].apply(impute_age,axis=1)
+```
+Now let's check that heat map again!
+```python
+sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
+```
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+Great! Let's go ahead and drop the Cabin column and the row in Embarked that is NaN.
+```python
+train.drop('Cabin',axis=1,inplace=True)
+```
+```python
+sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
+```
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+```python
+train = train.dropna()
+```
+```python
+sns.heatmap(train.isnull(),yticklabels=False,cbar=False,cmap='viridis')
+```
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+# Converting Categorical Features 
+
+We'll need to convert categorical features to dummy variables using pandas! Otherwise our machine learning algorithm won't be able to directly take in those features as inputs.
+
+```python
+sex = pd.get_dummies(train['Sex'],drop_first=True)
+embark = pd.get_dummies(train['Embarked'],drop_first=True)
+train.drop(['Sex','Embarked','Name','Ticket'],axis=1,inplace=True)
+train = pd.concat([train,sex,embark],axis=1)
+```
+```python
+train.head()
+```
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+# Building a Logistic Regression model
+
+Let's start by splitting our data into a training set and test set
+
+## Train Test Split
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(train.drop('Survived',axis=1), 
+                                                    train['Survived'], test_size=0.30, 
+                                                    random_state=101)
+```
+## Training and Predicting
+```python
+from sklearn.linear_model import LogisticRegression
+logmodel = LogisticRegression(max_iter=10000)
+logmodel.fit(X_train,y_train)
+predictions = logmodel.predict(X_test)
+```
+## Evaluation
+```python
+from sklearn.metrics import classification_report
+print(classification_report(y_test,predictions))
+```
+![image](https://www.ex-t.com/wp-content/uploads/2019/04/blank-160.png)
+
+At last we got a score of 82% accuracy on this model.
