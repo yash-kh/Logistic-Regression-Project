@@ -134,7 +134,7 @@ train = pd.concat([train,sex,embark],axis=1)
 ```python
 train.head()
 ```
-![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/12.PNG?raw=true)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/12.png?raw=true)
 
 # Building a Logistic Regression model
 
