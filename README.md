@@ -19,7 +19,7 @@ import seaborn as sns
 train = pd.read_csv('titanic_train.csv')
 train.head()
 ```
-![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/1.png?raw=true)
+![image](https://github.com/yash-kh/Logistic-Regression-Project/blob/master/plots/1.PNG?raw=true)
 
 # Exploratory Data Analysis
 ## Missing Data
